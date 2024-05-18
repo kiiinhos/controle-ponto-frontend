@@ -2,22 +2,19 @@ import React, { useState } from "react";
 import Button from "@/components/Button";
 import UserInput from "@/components/UserInput";
 import Title from "@/components/Title";
-import { getUserByCode } from "../services/userService";
+import Dashboard from "@/components/Dashboard";
 
 const Home: React.FC = () => {
   const [userCode, setUserCode] = useState("");
+  const [showDashboard, setShowDashboard] = useState(false);
 
-  const handleConfirmClick = async () => {
-    try {
-      const user = await getUserByCode(userCode);
-      console.log("Usuário encontrado:", user);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Erro ao buscar usuário:", error.message);
-      } else {
-        console.error("Erro desconhecido ao buscar usuário:", error);
-      }
-    }
+  const handleConfirmClick = () => {
+    setShowDashboard(true);
+  };
+
+  const handleReturnToHome = () => {
+    setShowDashboard(false);
+    setUserCode("");
   };
 
   return (
@@ -32,26 +29,34 @@ const Home: React.FC = () => {
         padding: "20px",
       }}
     >
-      <Title text="Ponto Illumeo" />
-
-      <main
-        className="container mx-auto p-4"
-        style={{ textAlign: "center", color: "#fff" }}
-      >
-        <UserInput placeholder="Código do Usuário" onChange={setUserCode} />
-        <Button
-          label="Confirmar"
-          onClick={handleConfirmClick}
-          style={{
-            width: "365px",
-            height: "47px",
-            borderRadius: "4px",
-            backgroundColor: "#FE8A00",
-            color: "#1E2733",
-            marginTop: "4vw",
-          }}
-        />
-      </main>
+      {showDashboard ? (
+        <Dashboard userCode={userCode} onReturnToHome={handleReturnToHome} />
+      ) : (
+        <>
+          <Title text="Ponto Illumeo" />
+          <main
+            className="container mx-auto p-4"
+            style={{ textAlign: "center", color: "#fff" }}
+          >
+            <UserInput
+              placeholder="Código do Usuário"
+              onChange={(e) => setUserCode(e)}
+            />
+            <Button
+              label="Confirmar"
+              onClick={handleConfirmClick}
+              style={{
+                width: "365px",
+                height: "47px",
+                borderRadius: "4px",
+                backgroundColor: "#FE8A00",
+                color: "#1E2733",
+                marginTop: "4vw",
+              }}
+            />
+          </main>
+        </>
+      )}
     </div>
   );
 };
