@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import Button from "@/components/Button";
 import UserInput from "@/components/UserInput";
 import Title from "@/components/Title";
