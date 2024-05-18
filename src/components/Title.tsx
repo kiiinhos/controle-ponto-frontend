@@ -6,19 +6,16 @@ interface TitleProps {
 
 const Title: React.FC<TitleProps> = ({ text }) => {
   return (
-    <h1
-      style={{
-        fontFamily: "Montserrat",
-        fontWeight: 400,
-        fontSize: "21.52px",
-        lineHeight: "26.23px",
-        textAlign: "center",
-        marginBottom: "9vw",
-        marginRight: "12.5vw",
-        color: "#CFCFCF",
-      }}
-    >
-      {text}
+    <h1 className="text-2xl font-bold mb-8 text-left w-full">
+      {text.split(" ").map((word, index) =>
+        index === 1 ? (
+          <span key={index} className="font-extrabold text-white">
+            {word}
+          </span>
+        ) : (
+          `${word} `
+        )
+      )}
     </h1>
   );
 };

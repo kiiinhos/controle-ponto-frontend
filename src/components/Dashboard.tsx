@@ -7,11 +7,20 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ userCode, onReturnToHome }) => {
   const [isEntry, setIsEntry] = useState(true);
+  const [entryTime, setEntryTime] = useState<string | null>(null);
+  const [exitTime, setExitTime] = useState<string | null>(null);
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString();
+  };
 
   const handleButtonClick = () => {
     if (isEntry) {
+      setEntryTime(getCurrentTime());
       setIsEntry(false);
     } else {
+      setExitTime(getCurrentTime());
       onReturnToHome();
     }
   };
@@ -27,7 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userCode, onReturnToHome }) => {
       >
         <div>
           <h2>Relógio de ponto</h2>
-          <p>{isEntry ? "0h 0m" : "6h 13m"}</p>
+          <p>{isEntry ? entryTime || "0h 0m" : exitTime || "6h 13m"}</p>
           <p>Horas de hoje</p>
           <button
             onClick={handleButtonClick}

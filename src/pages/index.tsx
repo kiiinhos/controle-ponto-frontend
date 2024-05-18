@@ -33,15 +33,14 @@ const Home: React.FC = () => {
         <Dashboard userCode={userCode} onReturnToHome={handleReturnToHome} />
       ) : (
         <>
-          <Title text="Ponto Illumeo" />
           <main
-            className="container mx-auto p-4"
+            className="flex flex-col items-center p-4"
             style={{ textAlign: "center", color: "#fff" }}
           >
-            <UserInput
-              placeholder="Código do Usuário"
-              onChange={(e) => setUserCode(e)}
-            />
+            <div className="w-96 mb-4 flex items-center">
+              <Title text="Ponto Ilumeo" />
+            </div>
+            <UserInput placeholder="Código do Usuário" onChange={setUserCode} />
             <Button
               label="Confirmar"
               onClick={handleConfirmClick}
@@ -51,7 +50,7 @@ const Home: React.FC = () => {
                 borderRadius: "4px",
                 backgroundColor: "#FE8A00",
                 color: "#1E2733",
-                marginTop: "4vw",
+                marginTop: "20px",
               }}
             />
           </main>

@@ -16,29 +16,22 @@ const UserInput: React.FC<UserInputProps> = ({ placeholder, onChange }) => {
 
   return (
     <div
-      className="flex justify-center items-center"
-      style={{
-        width: "365px",
-        height: "60px",
-        position: "absolute",
-        top: "386px",
-        left: "457px",
-        marginLeft: "16.7vw",
-        borderRadius: "4px",
-        backgroundColor: "#1E2733",
-      }}
+      className="relative w-96 h-16 rounded-md bg-gray-800 flex items-center px-4"
+      style={{ marginTop: "20px" }}
     >
       <input
         type="text"
         id="username"
         required
-        className="w-full h-full px-4 text-sm peer bg-gray-900 outline-none text-white"
+        className="w-full h-full bg-transparent outline-none text-white pt-4"
         value={value}
         onChange={handleChange}
+        placeholder=""
       />
       <label
         htmlFor="username"
-        className="transform transition-all absolute top-0 left-0 h-full flex items-center pl-2 text-sm group-focus-within:text-xs peer-valid:text-xs group-focus-within:h-1/2 peer-valid:h-1/2 group-focus-within:-translate-y-full peer-valid:-translate-y-full group-focus-within:pl-0 peer-valid:pl-0 text-white"
+        className="absolute top-0 left-4 text-gray-500 transition-all transform -translate-y-1/2 text-xs pt-2"
+        style={{ pointerEvents: "none" }}
       >
         {placeholder}
       </label>
