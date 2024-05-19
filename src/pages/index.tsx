@@ -72,6 +72,7 @@ const Home: React.FC = () => {
               backgroundColor: "#FE8A00",
               color: "#1E2733",
               marginTop: "2vw",
+              fontWeight: "bold",
             }}
           />
         </div>
