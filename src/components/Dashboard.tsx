@@ -1,4 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Button from "@/components/Button";
+import {
+  registerEntry,
+  registerExit,
+  getEntriesByUserCode,
+  getExitsByUserCode,
+} from "../services/registerService";
+import { Entry, Exit } from "../types/types";
 
 interface DashboardProps {
   userCode: string;
@@ -6,23 +14,34 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ userCode, onReturnToHome }) => {
-  const [isEntry, setIsEntry] = useState(true);
-  const [entryTime, setEntryTime] = useState<string | null>(null);
-  const [exitTime, setExitTime] = useState<string | null>(null);
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [exits, setExits] = useState<Exit[]>([]);
+  const [currentEntry, setCurrentEntry] = useState<Entry | null>(null);
 
-  const getCurrentTime = () => {
-    const now = new Date();
-    return now.toLocaleTimeString();
+  useEffect(() => {
+    const fetchEntries = async () => {
+      const userEntries = await getEntriesByUserCode(userCode);
+      setEntries(userEntries);
+    };
+
+    const fetchExits = async () => {
+      const userExits = await getExitsByUserCode(userCode);
+      setExits(userExits);
+    };
+
+    fetchEntries();
+    fetchExits();
+  }, [userCode]);
+
+  const handleRegisterEntry = async () => {
+    const newEntry = await registerEntry(userCode);
+    setCurrentEntry(newEntry);
+    setEntries([...entries, newEntry]);
   };
 
-  const handleButtonClick = () => {
-    if (isEntry) {
-      setEntryTime(getCurrentTime());
-      setIsEntry(false);
-    } else {
-      setExitTime(getCurrentTime());
-      onReturnToHome();
-    }
+  const handleRegisterExit = async () => {
+    const newExit = await registerExit(userCode);
+    setExits([...exits, newExit]);
   };
 
   return (
@@ -36,25 +55,14 @@ const Dashboard: React.FC<DashboardProps> = ({ userCode, onReturnToHome }) => {
       >
         <div>
           <h2>Relógio de ponto</h2>
-          <p>{isEntry ? entryTime || "0h 0m" : exitTime || "6h 13m"}</p>
+          <p>{currentEntry ? `${currentEntry.hourEntry}` : "0h 0m"}</p>
           <p>Horas de hoje</p>
-          <button
-            onClick={handleButtonClick}
-            style={{
-              backgroundColor: "#FE8A00",
-              color: "#1E2733",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "4px",
-            }}
-          >
-            {isEntry ? "Hora de entrada" : "Hora de saída"}
-          </button>
+          <Button label="Hora de entrada" onClick={handleRegisterEntry} />
+          <Button label="Hora de saída" onClick={handleRegisterExit} />
         </div>
         <div style={{ textAlign: "right" }}>
           <h2>Código do usuário</h2>
           <p>{userCode}</p>
-          <p>#3SXYFGF</p>
         </div>
       </div>
       <div style={{ marginTop: "20px" }}>
@@ -70,20 +78,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userCode, onReturnToHome }) => {
         <div
           style={{ marginTop: "10px", maxHeight: "600px", overflowY: "auto" }}
         >
-          {[
-            "03/11/23",
-            "04/11/23",
-            "05/11/23",
-            "06/11/23",
-            "09/11/23",
-            "22/11/23",
-            "24/12/23",
-            "25/12/23",
-            "26/12/23",
-            "27/12/23",
-            "28/12/23",
-            "29/12/23",
-          ].map((date, index) => (
+          {entries.map((entry, index) => (
             <div
               key={index}
               style={{
@@ -93,12 +88,35 @@ const Dashboard: React.FC<DashboardProps> = ({ userCode, onReturnToHome }) => {
                 borderBottom: "1px solid #333",
               }}
             >
-              <span>{date}</span>
-              <span>7h 30m</span>
+              <span>{entry.dateEntry}</span>
+              <span>{entry.hourEntry}</span>
+            </div>
+          ))}
+          {exits.map((exit, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "10px 0",
+                borderBottom: "1px solid #333",
+              }}
+            >
+              <span>{exit.dateExit}</span>
+              <span>{exit.hourExit}</span>
             </div>
           ))}
         </div>
       </div>
+      <Button
+        label="Voltar"
+        onClick={onReturnToHome}
+        style={{
+          marginTop: "20px",
+          backgroundColor: "#FE8A00",
+          color: "#1E2733",
+        }}
+      />
     </div>
   );
 };

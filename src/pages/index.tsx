@@ -2,18 +2,25 @@ import React, { useState } from "react";
 import Button from "@/components/Button";
 import UserInput from "@/components/UserInput";
 import Title from "@/components/Title";
-import Dashboard from "@/components/Dashboard";
+import EntryDashboard from "@/components/EntryDashboard";
+import ExitDashboard from "@/components/ExitDashboard";
 
 const Home: React.FC = () => {
   const [userCode, setUserCode] = useState("");
-  const [showDashboard, setShowDashboard] = useState(false);
+  const [showEntryDashboard, setShowEntryDashboard] = useState(false);
+  const [showExitDashboard, setShowExitDashboard] = useState(false);
 
   const handleConfirmClick = () => {
-    setShowDashboard(true);
+    setShowEntryDashboard(true);
+  };
+
+  const handleSwitchToExit = () => {
+    setShowEntryDashboard(false);
+    setShowExitDashboard(true);
   };
 
   const handleReturnToHome = () => {
-    setShowDashboard(false);
+    setShowExitDashboard(false);
     setUserCode("");
   };
 
@@ -29,32 +36,45 @@ const Home: React.FC = () => {
         padding: "20px",
       }}
     >
-      {showDashboard ? (
-        <Dashboard userCode={userCode} onReturnToHome={handleReturnToHome} />
+      {showEntryDashboard ? (
+        <EntryDashboard
+          userCode={userCode}
+          onSwitchToExit={handleSwitchToExit}
+          onReturnToHome={handleReturnToHome}
+        />
+      ) : showExitDashboard ? (
+        <ExitDashboard
+          userCode={userCode}
+          onReturnToHome={handleReturnToHome}
+        />
       ) : (
-        <>
-          <main
-            className="flex flex-col items-center p-4"
-            style={{ textAlign: "center", color: "#fff" }}
-          >
-            <div className="w-96 mb-4 flex items-center">
-              <Title text="Ponto Ilumeo" />
-            </div>
-            <UserInput placeholder="Código do Usuário" onChange={setUserCode} />
-            <Button
-              label="Confirmar"
-              onClick={handleConfirmClick}
-              style={{
-                width: "365px",
-                height: "47px",
-                borderRadius: "4px",
-                backgroundColor: "#FE8A00",
-                color: "#1E2733",
-                marginTop: "20px",
-              }}
-            />
-          </main>
-        </>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            maxWidth: "400px",
+          }}
+        >
+          <Title text="Ponto Illumeo" />
+          <UserInput
+            placeholder="Código do Usuário"
+            onChange={(e) => setUserCode(e)}
+          />
+          <Button
+            label="Confirmar"
+            onClick={handleConfirmClick}
+            style={{
+              width: "95%",
+              height: "47px",
+              borderRadius: "4px",
+              backgroundColor: "#FE8A00",
+              color: "#1E2733",
+              marginTop: "2vw",
+            }}
+          />
+        </div>
       )}
     </div>
   );

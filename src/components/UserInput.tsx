@@ -3,9 +3,14 @@ import React, { useState, ChangeEvent } from "react";
 interface UserInputProps {
   placeholder: string;
   onChange: (value: string) => void;
+  className?: string; // Adiciona a propriedade className
 }
 
-const UserInput: React.FC<UserInputProps> = ({ placeholder, onChange }) => {
+const UserInput: React.FC<UserInputProps> = ({
+  placeholder,
+  onChange,
+  className,
+}) => {
   const [value, setValue] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +21,7 @@ const UserInput: React.FC<UserInputProps> = ({ placeholder, onChange }) => {
 
   return (
     <div
-      className="relative w-96 h-16 rounded-md bg-gray-800 flex items-center px-4"
+      className={`relative w-96 h-16 rounded-md bg-gray-800 flex items-center px-4 ${className}`} // Usa a propriedade className aqui
       style={{ marginTop: "20px" }}
     >
       <input

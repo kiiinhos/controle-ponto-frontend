@@ -3,12 +3,12 @@ import React from "react";
 interface ButtonProps {
   onClick: () => void;
   label: string;
-  style?: React.CSSProperties; // Definindo a propriedade de estilo como opcional
+  style?: React.CSSProperties;
 }
 
 const Button: React.FC<ButtonProps> = ({ onClick, label, style }) => {
   return (
-    <button onClick={onClick} className="btn" style={style}>
+    <button onClick={onClick} style={style}>
       {label}
     </button>
   );
