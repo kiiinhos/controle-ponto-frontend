@@ -89,6 +89,7 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
             marginTop: "10px",
             width: "400px",
             height: "47px",
+            fontWeight: "bold",
           }}
         />
         <div style={{ marginTop: "20px" }}>
