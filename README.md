@@ -6,6 +6,8 @@
 
 Bem-vindo ao projeto Controle de Ponto, desenvolvido como parte do Teste Técnico - Fullstack para a Ilumeo Data Science. Este projeto tem como objetivo criar uma aplicação para controle de ponto dos colaboradores, permitindo que visualizem suas horas trabalhadas de forma clara e intuitiva.
 
+URL : https://controle-ponto-frontend.vercel.app/
+
 ## 🎯 Objetivo
 
 - **Visualização atualizada das horas trabalhadas no dia atual:** Os colaboradores podem ver em tempo real as horas que já trabalharam no dia.
@@ -19,6 +21,7 @@ Bem-vindo ao projeto Controle de Ponto, desenvolvido como parte do Teste Técnic
 - TailwindCSS: Framework de CSS utilitário para estilização.
 - Axios: Biblioteca para realizar requisições HTTP.
 - TypeScript: Superset de JavaScript que adiciona tipagem estática.
+- Vercel: Plataforma utilizada para o deploy do frontend, proporcionando um ambiente de hospedagem otimizado para aplicações React.
 
 ## 🔧 Instalação e Configuração
 
