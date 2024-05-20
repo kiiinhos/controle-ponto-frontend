@@ -38,15 +38,15 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
       const seconds = String(now.getSeconds()).padStart(2, "0");
       setCurrentTime(`${hours}:${minutes}:${seconds}`);
     };
-    updateTime(); // Atualiza a hora imediatamente
-    const interval = setInterval(updateTime, 1000); // Atualiza a cada segundo
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const handleRegisterEntry = async () => {
     const now = new Date();
-    const hourEntry = now.toTimeString().split(" ")[0]; // Formato HH:MM:SS
-    const dateEntry = now.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const hourEntry = now.toTimeString().split(" ")[0];
+    const dateEntry = now.toISOString().split("T")[0];
     const newEntry = await registerEntry(userCode, hourEntry, dateEntry);
     setCurrentEntry(newEntry);
     setEntries([...entries, newEntry]);
@@ -110,8 +110,8 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
           <div
             style={{
               marginTop: "10px",
-              maxHeight: "800px", // Aumentar a altura para caber mais dados
-              width: "400px", // Aumentar a largura
+              maxHeight: "800px",
+              width: "400px",
               overflowY: "auto",
             }}
           >
@@ -123,7 +123,7 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
                   justifyContent: "space-between",
                   padding: "10px 0",
                   borderBottom: "1px solid #333",
-                  width: "100%", // Ajustar para 100% da largura do container
+                  width: "100%",
                   height: "41px",
                   backgroundColor: "rgba(217, 217, 217, 0.05)",
                   borderRadius: "4px",

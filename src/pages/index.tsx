@@ -9,14 +9,14 @@ const Home: React.FC = () => {
   const [userCode, setUserCode] = useState("");
   const [showEntryDashboard, setShowEntryDashboard] = useState(false);
   const [showExitDashboard, setShowExitDashboard] = useState(false);
-  const [error, setError] = useState(""); // Estado para a mensagem de erro
+  const [error, setError] = useState("");
 
   const handleConfirmClick = () => {
     if (userCode.trim() === "") {
       setError("O campo precisa ser preenchido");
     } else {
       setShowEntryDashboard(true);
-      setError(""); // Limpa a mensagem de erro ao confirmar com sucesso
+      setError("");
     }
   };
 
