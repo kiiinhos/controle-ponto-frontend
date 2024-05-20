@@ -23,6 +23,7 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
   const [currentTime, setCurrentTime] = useState<string>("");
   const [workTimeToday, setWorkTimeToday] = useState<string>("0h 0m");
   const [history, setHistory] = useState<UserHistory[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchEntriesAndHistory = async () => {
@@ -64,8 +65,26 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
 
   const handleRegisterEntry = async () => {
     const now = new Date();
-    const hourEntry = now.toTimeString().split(" ")[0];
     const dateEntry = now.toISOString().split("T")[0];
+
+    const latestEntryToday = entries.find(
+      (entry) => entry.dateEntry === dateEntry
+    );
+
+    if (latestEntryToday) {
+      setErrorMessage(
+        "Por favor, registre uma saída antes de registrar uma nova entrada. Você sera redirecionado"
+      );
+      setTimeout(() => {
+        setErrorMessage("");
+        onSwitchToExit();
+      }, 6000);
+      return;
+    } else {
+      onSwitchToExit();
+    }
+
+    const hourEntry = now.toTimeString().split(" ")[0];
     const newEntry = await registerEntry(userCode, hourEntry, dateEntry);
     setCurrentEntry(newEntry);
     setEntries([...entries, newEntry]);
@@ -73,11 +92,11 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
     const userHistory = await getUserHistory(userCode);
     setHistory(userHistory);
 
-    const latestHistory = userHistory.find(
+    const updatedHistory = userHistory.find(
       (entry) => entry.dateExit === dateEntry
     );
-    if (latestHistory) {
-      setWorkTimeToday(latestHistory.workTime);
+    if (updatedHistory) {
+      setWorkTimeToday(updatedHistory.workTime);
     }
   };
 
@@ -92,6 +111,18 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
         alignItems: "center",
       }}
     >
+      {errorMessage && (
+        <div
+          style={{
+            color: "red",
+            marginBottom: "20px",
+            textAlign: "center",
+            fontWeight: "bold",
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
       <div style={{ width: "400px" }}>
         <div
           style={{
