@@ -9,9 +9,15 @@ const Home: React.FC = () => {
   const [userCode, setUserCode] = useState("");
   const [showEntryDashboard, setShowEntryDashboard] = useState(false);
   const [showExitDashboard, setShowExitDashboard] = useState(false);
+  const [error, setError] = useState(""); // Estado para a mensagem de erro
 
   const handleConfirmClick = () => {
-    setShowEntryDashboard(true);
+    if (userCode.trim() === "") {
+      setError("O campo precisa ser preenchido");
+    } else {
+      setShowEntryDashboard(true);
+      setError(""); // Limpa a mensagem de erro ao confirmar com sucesso
+    }
   };
 
   const handleSwitchToExit = () => {
@@ -58,6 +64,9 @@ const Home: React.FC = () => {
           }}
         >
           <Title text="Ponto Illumeo" />
+          {error && (
+            <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>
+          )}
           <UserInput
             placeholder="Código do Usuário"
             onChange={(e) => setUserCode(e)}

@@ -3,7 +3,7 @@ import React, { useState, ChangeEvent } from "react";
 interface UserInputProps {
   placeholder: string;
   onChange: (value: string) => void;
-  className?: string; // Adiciona a propriedade className
+  className?: string;
 }
 
 const UserInput: React.FC<UserInputProps> = ({
@@ -21,7 +21,7 @@ const UserInput: React.FC<UserInputProps> = ({
 
   return (
     <div
-      className={`relative w-96 h-16 rounded-md bg-gray-800 flex items-center px-4 ${className}`} // Usa a propriedade className aqui
+      className={`relative w-96 h-16 rounded-md flex items-center px-4 bg-gray-800 ${className}`}
       style={{ marginTop: "20px" }}
     >
       <input
