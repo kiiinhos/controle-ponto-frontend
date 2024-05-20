@@ -35,7 +35,6 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
         setCurrentExit(latestExit);
       }
 
-      // Atualizar o tempo de trabalho do dia mais recente
       const today = new Date().toISOString().split("T")[0];
       const latestHistory = userHistory.find(
         (entry) => entry.dateExit === today
@@ -64,8 +63,8 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
 
   const handleRegisterExit = async () => {
     const now = new Date();
-    const hourExit = now.toTimeString().split(" ")[0]; // Formato HH:MM:SS
-    const dateExit = now.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const hourExit = now.toTimeString().split(" ")[0];
+    const dateExit = now.toISOString().split("T")[0];
     const newExit = await registerExit(userCode, hourExit, dateExit);
     setCurrentExit(newExit);
     setExits([...exits, newExit]);
@@ -73,7 +72,6 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
     const userHistory = await getUserHistory(userCode);
     setHistory(userHistory);
 
-    // Atualizar o tempo de trabalho do dia mais recente após registrar a saída
     const latestHistory = userHistory.find(
       (entry) => entry.dateExit === dateExit
     );

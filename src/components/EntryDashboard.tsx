@@ -36,7 +36,6 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
         setCurrentEntry(latestEntry);
       }
 
-      // Atualizar o tempo de trabalho do dia mais recente
       const today = new Date().toISOString().split("T")[0];
       const latestHistory = userHistory.find(
         (entry) => entry.dateExit === today
@@ -74,7 +73,6 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
     const userHistory = await getUserHistory(userCode);
     setHistory(userHistory);
 
-    // Atualizar o tempo de trabalho do dia mais recente após registrar a entrada
     const latestHistory = userHistory.find(
       (entry) => entry.dateExit === dateEntry
     );
