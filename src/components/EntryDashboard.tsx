@@ -3,9 +3,9 @@ import Button from "@/components/Button";
 import {
   registerEntry,
   getEntriesByUserCode,
+  getUserHistory,
 } from "../services/registerService";
-import { Entry } from "../types/types";
-import { formatDateToBR } from "../utils/dateUtils";
+import { Entry, UserHistory } from "../types/types";
 
 interface EntryDashboardProps {
   userCode: string;
@@ -20,14 +20,31 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
   const [entries, setEntries] = useState<Entry[]>([]);
   const [currentEntry, setCurrentEntry] = useState<Entry | null>(null);
   const [currentTime, setCurrentTime] = useState<string>("");
+  const [workTimeToday, setWorkTimeToday] = useState<string>("0h 0m");
+  const [history, setHistory] = useState<UserHistory[]>([]);
 
   useEffect(() => {
-    const fetchEntries = async () => {
+    const fetchEntriesAndHistory = async () => {
       const userEntries = await getEntriesByUserCode(userCode);
       setEntries(userEntries);
+      const userHistory = await getUserHistory(userCode);
+      setHistory(userHistory);
+
+      if (userEntries.length > 0) {
+        const latestEntry = userEntries[userEntries.length - 1];
+        setCurrentEntry(latestEntry);
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+      const latestHistory = userHistory.find(
+        (entry) => entry.dateExit === today
+      );
+      if (latestHistory) {
+        setWorkTimeToday(latestHistory.workTime);
+      }
     };
 
-    fetchEntries();
+    fetchEntriesAndHistory();
   }, [userCode]);
 
   useEffect(() => {
@@ -38,6 +55,7 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
       const seconds = String(now.getSeconds()).padStart(2, "0");
       setCurrentTime(`${hours}:${minutes}:${seconds}`);
     };
+
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
@@ -51,6 +69,15 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
     setCurrentEntry(newEntry);
     setEntries([...entries, newEntry]);
     onSwitchToExit();
+    const userHistory = await getUserHistory(userCode);
+    setHistory(userHistory);
+
+    const latestHistory = userHistory.find(
+      (entry) => entry.dateExit === dateEntry
+    );
+    if (latestHistory) {
+      setWorkTimeToday(latestHistory.workTime);
+    }
   };
 
   return (
@@ -74,8 +101,9 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
         >
           <div>
             <h2>Relógio de ponto</h2>
-            <p>{currentEntry ? `${currentEntry.hourEntry}` : currentTime}</p>
+            <p>{currentTime}</p>
             <p>Horas de hoje</p>
+            <p>{workTimeToday}</p>
           </div>
           <div style={{ textAlign: "right" }}>
             <h2 style={{ margin: 0 }}>#{userCode}</h2>
@@ -115,7 +143,7 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
               overflowY: "auto",
             }}
           >
-            {entries.map((entry, index) => (
+            {history.map((entry, index) => (
               <div
                 key={index}
                 style={{
@@ -130,8 +158,11 @@ const EntryDashboard: React.FC<EntryDashboardProps> = ({
                   marginBottom: "5%",
                 }}
               >
-                <span>{formatDateToBR(entry.dateEntry)}</span>
-                <span>{entry.hourEntry}</span>
+                <span>{entry.dateEntry}</span>
+                <span>
+                  {entry.hourEntry} - {entry.hourExit}
+                </span>
+                <span>{entry.workTime}</span>
               </div>
             ))}
           </div>

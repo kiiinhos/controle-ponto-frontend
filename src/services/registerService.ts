@@ -1,5 +1,5 @@
 import api from "../utils/api";
-import { Entry, Exit } from "../types/types";
+import { Entry, Exit, UserHistory } from "../types/types";
 
 export const registerEntry = async (
   userCode: string,
@@ -52,5 +52,16 @@ export const getExitsByUserCode = async (userCode: string): Promise<Exit[]> => {
     return response.data;
   } catch (error) {
     throw new Error("Erro ao buscar registros de saída.");
+  }
+};
+
+export const getUserHistory = async (
+  userCode: string
+): Promise<UserHistory[]> => {
+  try {
+    const response = await api.get(`/registers/history/${userCode}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Erro ao buscar histórico de usuário.");
   }
 };

@@ -11,3 +11,11 @@ export interface Exit {
   hourExit: string;
   id: number;
 }
+export interface UserHistory {
+  userCode: string;
+  dateEntry: string;
+  dateExit: string;
+  hourEntry: string;
+  hourExit: string;
+  workTime: string;
+}

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Button from "@/components/Button";
-import { registerExit, getExitsByUserCode } from "../services/registerService";
-import { Exit } from "../types/types";
-import { formatDateToBR } from "../utils/dateUtils";
+import {
+  registerExit,
+  getExitsByUserCode,
+  getUserHistory,
+} from "../services/registerService";
+import { Exit, UserHistory } from "../types/types";
 
 interface ExitDashboardProps {
   userCode: string;
@@ -16,14 +19,31 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
   const [exits, setExits] = useState<Exit[]>([]);
   const [currentExit, setCurrentExit] = useState<Exit | null>(null);
   const [currentTime, setCurrentTime] = useState<string>("");
+  const [workTimeToday, setWorkTimeToday] = useState<string>("0h 0m");
+  const [history, setHistory] = useState<UserHistory[]>([]);
 
   useEffect(() => {
-    const fetchExits = async () => {
+    const fetchExitsAndHistory = async () => {
       const userExits = await getExitsByUserCode(userCode);
       setExits(userExits);
+      const userHistory = await getUserHistory(userCode);
+      setHistory(userHistory);
+
+      if (userExits.length > 0) {
+        const latestExit = userExits[userExits.length - 1];
+        setCurrentExit(latestExit);
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+      const latestHistory = userHistory.find(
+        (entry) => entry.dateExit === today
+      );
+      if (latestHistory) {
+        setWorkTimeToday(latestHistory.workTime);
+      }
     };
 
-    fetchExits();
+    fetchExitsAndHistory();
   }, [userCode]);
 
   useEffect(() => {
@@ -34,18 +54,29 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
       const seconds = String(now.getSeconds()).padStart(2, "0");
       setCurrentTime(`${hours}:${minutes}:${seconds}`);
     };
-    updateTime(); // Atualiza a hora imediatamente
-    const interval = setInterval(updateTime, 1000); // Atualiza a cada segundo
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const handleRegisterExit = async () => {
     const now = new Date();
-    const hourExit = now.toTimeString().split(" ")[0]; // Formato HH:MM:SS
-    const dateExit = now.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const hourExit = now.toTimeString().split(" ")[0];
+    const dateExit = now.toISOString().split("T")[0];
     const newExit = await registerExit(userCode, hourExit, dateExit);
     setCurrentExit(newExit);
     setExits([...exits, newExit]);
+
+    const userHistory = await getUserHistory(userCode);
+    setHistory(userHistory);
+
+    const latestHistory = userHistory.find(
+      (entry) => entry.dateExit === dateExit
+    );
+    if (latestHistory) {
+      setWorkTimeToday(latestHistory.workTime);
+    }
   };
 
   return (
@@ -69,8 +100,9 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
         >
           <div>
             <h2>Relógio de ponto</h2>
-            <p>{currentExit ? `${currentExit.hourExit}` : currentTime}</p>
+            <p>{currentTime}</p>
             <p>Horas de hoje</p>
+            <p>{workTimeToday}</p>
           </div>
           <div style={{ textAlign: "right" }}>
             <h2 style={{ margin: 0 }}>#{userCode}</h2>
@@ -110,7 +142,7 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
               overflowY: "auto",
             }}
           >
-            {exits.map((exit, index) => (
+            {history.map((entry, index) => (
               <div
                 key={index}
                 style={{
@@ -125,8 +157,11 @@ const ExitDashboard: React.FC<ExitDashboardProps> = ({
                   marginBottom: "5%",
                 }}
               >
-                <span>{formatDateToBR(exit.dateExit)}</span>
-                <span>{exit.hourExit}</span>
+                <span>{entry.dateEntry}</span>
+                <span>
+                  {entry.hourEntry} - {entry.hourExit}
+                </span>
+                <span>{entry.workTime}</span>
               </div>
             ))}
           </div>

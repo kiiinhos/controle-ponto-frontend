@@ -1,4 +1,3 @@
-// utils/dateUtils.ts
 export const formatDateToBR = (dateString: string): string => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
